@@ -1,0 +1,6 @@
+net
+load
+wpas
+join -p password SSID
+ifconfig wlan0 192.168.42.123
+
