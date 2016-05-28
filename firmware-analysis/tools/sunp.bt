@@ -1,0 +1,75 @@
+typedef struct {
+    CHAR magic[14];
+    WORD _unk0;
+    DWORD total_size;
+    DWORD off_burnhdr1;
+    DWORD off_burnhdr2;
+    DWORD off_code;
+    DWORD unk_zero;
+    DWORD off_burnhdr3;
+    DWORD unk;
+    BYTE unk2[468];
+} HDR;
+
+typedef struct {
+    CHAR magic[14];
+    CHAR which[2]; // TODO maybe var len?
+} BURNHDR;
+
+typedef struct {
+    BURNHDR m;
+} BURNHDR1;
+
+typedef struct {
+    CHAR unk[128];
+} MYSTERY;
+
+typedef struct {
+    BURNHDR m;
+    DWORD count;
+    CHAR _unk[12];
+    MYSTERY mysteries[count];
+} BURNHDR2;
+
+typedef struct {
+    CHAR filename[0x70];
+} BACKUP_FILENAME;
+
+typedef struct {
+    BURNHDR m;
+    DWORD fn_count;
+    CHAR _unk[12];
+    BACKUP_FILENAME backup_filenames[fn_count];
+} BURNHDR3;
+
+typedef struct {
+    CHAR magic[7];
+    // DWORD addr, DWORD param, WORD delay
+} DRAMPAR;
+
+SetBackColor(cLtGreen);
+HDR hdr;
+SetBackColor( cNone );
+if( hdr.magic != "SUNP BURN FILE" )
+{
+    Warning( "No magic found. Template stopped." );
+    return -1;
+}
+FSeek(hdr.off_burnhdr1);
+SetBackColor(cLtYellow);
+BURNHDR1 burnhdr1;
+
+FSeek(hdr.off_burnhdr2);
+
+SetBackColor(cLtBlue);
+BURNHDR2 burnhdr2;
+
+FSeek(hdr.off_burnhdr3);
+BURNHDR3 burnhdr3;
+
+FSeek(hdr.off_code);
+
+SetBackColor(cGray);
+CHAR code[hdr.off_burnhdr3-hdr.off_code];
+
+SetBackColor(cNone);
