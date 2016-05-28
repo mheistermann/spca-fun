@@ -1,0 +1,21 @@
+cd ..
+del test2.bin
+host
+2
+
+make upload
+
+
+cd ..
+mapExe 0x804d2cc4 1000
+read test.bin XXX
+mapVar 0xb000132b 0x90
+mapVar 0xb000134b 0xb0
+mapExe 0x804d565c 0xa1000000 0x1000000 0x1000000
+
+mapExe XXX
+
+mipsel-linux-gnu-readelf -s test.elf|grep ep_test_printf_ro
+
+mipsel-linux-gnu-objdump -d test.elf
+
